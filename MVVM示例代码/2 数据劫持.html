@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="mvvm.js"></script>
+</head>
+<body>
+<div id="app">
+    {{a.a}}
+    {{a.b}}
+    <input type="text" v-model="b">
+    {{hello}}
+</div>
+</body>
+</html>
+<script>
+    let vue = new lzy({
+        el:'#app',
+        data:{
+            a:{a:'我是a',b:'我是b'}
+        },
+        computed:{
+            hello(){
+                return this.b + this.c
+            }
+        }
+    })
+</script>

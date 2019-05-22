@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+
+</body>
+</html>
+<script>
+    //Vue实现数据双向绑定的原理是通过数据劫持 + 发布订阅
+    let obj = {};
+    //定义一个属性
+    Object.defineProperty(obj,'name',{
+        configurable:ture, //是否可以被删除
+        //writable:true,//是否可以修改
+        enumerable:true,//是否可枚举
+        //value:'lzy',
+        get(){
+            //当你要获取属性值的时候
+        },
+        set(){
+            //当你要设置属性值的时候
+        }
+    })
+</script>
