@@ -1,6 +1,3 @@
-# vue-analysis
-vue源码分析
-
 ## 1. vue初始化
 
 > 5067行  Vue的函数
