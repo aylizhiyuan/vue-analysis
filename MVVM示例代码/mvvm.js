@@ -129,6 +129,7 @@ Dep.prototype.notify = function(){
     this.subs.forEach(sub=>sub.update());
 }
 //这是我们订阅的事件，每一个事件就是一个new Watcher
+//vm是watcher的作用域，exp是
 function Watcher(vm,exp,fn){
     this.vm = vm;
     this.exp = exp;
