@@ -2,9 +2,46 @@
 
 > 5067行  Vue的函数
 
-vue初始化主要干了这么几件事儿：合并配置、初始化生命周期、初始化事件中心、初始化渲染、初始化data/props/computed/watcher
+Vue函数实际上是一个构造函数，而且他只能通过new Vue实例化
 
-在初始化的最后，检测到如果有el属性，则调用vm.$mount方法挂载vm,挂载的目的就是把模板渲染成最终的DOM，那么接下来分析VUE的挂载过程
+调用_init方法进行初始化的操作
+
+    initMixin(Vue); //我们的_init方法添加到原型上去
+    stateMixin(Vue);//原型上添加$data,$prop,$watch原型方法
+    eventsMixin(Vue);//原型上添加事件$on,$once,$emit,$off方法
+    lifecycleMixin(Vue);//update方法和destroy方法
+    renderMixin(Vue);//添加$nextTick和_render方法
+
+我们还会在这个构造函数的原型上扩展一些方法和属性
+
+进入_init内部一探究竟
+
+> 4955行  _init函数
+
+这里面的vm指的应该是new Vue({})返回的实例对象，在这个对象上添加一些属性和方法
+
+mergeOptions 合并配置
+
+initLifecycle(vm) 初始化生命周期
+
+initEvents(vm) 初始化事件
+
+initRender(vm) 初始化渲染
+
+callhook(vm,'beforeCreate') 触发beforeCreate周期
+
+initInjections(vm) 注入器
+
+initState(vm) 初始化data/props/computed/watcher
+
+initProvide(vm) 初始服务
+
+callHook(vm,'created') 触发created周期
+
+最后vm.$mount(vm.$options.el)
+
+
+
 
 
 ## 2. vue实例挂载的实现
@@ -39,6 +76,8 @@ Watcher在这里起到两个作用，一个是初始化的时候会执行回调�
 
 > 3521行  _render函数
 
+    vnode = render.call(vm._renderProxy, vm.$createElement);
+
 这个函数最大的作用应该就是最终通过执行createElement方法返回vnode虚拟DOM
 
 ### 虚拟DOM
@@ -70,11 +109,29 @@ Virtual DOM 除了它的数据结构的定义，映射到真实的 DOM 实际上
 
 这个函数就是用来创建虚拟DOM的，实际是对_createElement函数的封装，实际调用的是这个。
 
+_createElement方法有5个参数，context表示vnode的上下文环境，它是Component类型，tag表示标签，它可以是一个字符串，也可以是一个Component，data表示Vnode的数据，children表示当前vnode的子节点
 
+这个函数里面主要完成的是children规范和vnode创建
 
-这里先对 tag 做判断，如果是 string 类型，则接着判断如果是内置的一些节点，则直接创建一个普通 VNode，如果是为已注册的组件名，则通过 createComponent 创建一个组件类型的 VNode，否则创建一个未知的标签的 VNode。 如果是 tag 一个 Component 类型，则直接调用 createComponent 创建一个组件类型的 VNode 节点。对于 createComponent 创建组件类型的 VNode 的过程，我们之后会去介绍，本质上它还是返回了一个 VNode
+### children规范
 
-那么至此，我们大致了解了 createElement 创建 VNode 的过程，每个 VNode 有 children，children 每个元素也是一个 VNode，这样就形成了一个 VNode Tree，它很好的描述了我们的 DOM Tree。
+由于virtual DOM实际上是一个 树状结构，每一个vnode可能还有若干个子节点，这些子节点应该也是vnode类型
+
+        if (normalizationType === ALWAYS_NORMALIZE) {
+            children = normalizeChildren(children);
+            } else if (normalizationType === SIMPLE_NORMALIZE) {
+            children = simpleNormalizeChildren(children);
+        }
+
+这里根据normalizationType的不同，调用了normalizeChildren和simpleNormalizeChildren方法
+
+这里不再展开说明，具体可以看虚拟DOM的实现
+
+### vnode创建
+
+> 3410行 以下都属于是vnode创建的整个过程
+
+这里先对 tag 做判断，如果是 string 类型，则接着判断如果是内置的一些节点，则直接创建一个普通 VNode，如果是为已注册的组件名，则通过 createComponent 创建一个组件类型的 VNode，否则创建一个未知的标签的 VNode。 如果是 tag 一个 Component 类型，则直接调用 createComponent 创建一个组件类型的 VNode 节点。对于 createComponent 创建组件类型的 VNode 的过程，我们之后会去介绍，本质上它还是返回了一个 VNode。
 
 ## 5. update
 
@@ -90,7 +147,7 @@ _update的核心就是调用vm.__patch__方法，该方法实际是调用createP
 
 ## 6. 总结
 
-new Vue  ----> init -----> $mount(挂载组件,将一个Vue的实例挂载到DOM上) ----> render(创建虚拟DOM) ------> vnode -----> patch（渲染成真实的DOM） -----> DOM
+new Vue  ----> init -----> $mount(挂载组件,将一个Vue的实例挂载到DOM上) ----> render(创建虚拟DOM) ------> vnode(虚拟DOM) -----> patch（渲染成真实的DOM） -----> DOM(真实的DOM)
 
 ## 7. 组件化
 
