@@ -8,12 +8,13 @@
     <script src="mvvm.js"></script>
     <script src="compile.js"></script>
     <script src="observer.js"></script>
+    <script src="watcher.js"></script>
 </head>
 <body>
     <div id="app">
-        <input type="text" v-model="message.a">
+        <input type="text" v-model="message">
         <div>
-            <div>{{message.a}}</div>
+            <div>{{message}}</div>
         </div>
     </div>
     
@@ -23,9 +24,7 @@
     let vm = new MVVM({
         el:"#app",
         data:{
-            message:{
-                a:"hello world"
-            }
+            message:"hello world"
         }
     })
 </script>

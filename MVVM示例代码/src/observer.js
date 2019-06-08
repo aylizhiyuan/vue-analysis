@@ -18,20 +18,34 @@ class Observer{
     //定义响应式
     defineReactive(obj,key,value){
         let that = this;
-        Object.defineProperties(obj,key,{
+        let dep = new Dep();//每个变化的数据都会对应一个数组，这个数组是存放所有更新的操作
+        Object.defineProperty(obj,key,{
             enumerable:true,
             configurable:true,
             get(){
                 //当我尝试去取data里面值的时候
+                Dep.target && dep.addSub(Dep.target);
                 return value;
             },
             set(newValue){
                 //当我尝试修改data里面值的时候
                 if(newValue != value){
-                    this.observe(newValue);//如果是新对象的话，继续劫持
+                    that.observe(newValue);//如果是新对象的话，继续劫持
                     value = newValue;
+                    dep.notify();
                 }
             }
         })
+    }
+}
+class Dep {
+    constructor(){
+        this.subs = [];
+    }
+    addSub(watcher){
+        this.subs.push(watcher);
+    }
+    notify(){
+        this.subs.forEach(watcher=>watcher.update());
     }
 }

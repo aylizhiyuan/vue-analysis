@@ -59,7 +59,7 @@ class Compile{
     compile(fragment){
         //递归
         let childNodes = fragment.childNodes;
-        console.log(childNodes);
+        //console.log(childNodes);
         Array.from(childNodes).forEach(node=>{
             //所有的节点(只是第一层)
             if(this.isElementNode(node)){
@@ -83,6 +83,7 @@ CompileUtil = {
         },vm.$data);
     },
     getTextVal(vm,expr){
+        console.log(expr);
         return expr.replace(/\{\{([^}]+)\}\}/g,(...arguments)=>{
             return this.getVal(vm,arguments[1]);
         });
@@ -91,11 +92,34 @@ CompileUtil = {
         //文本处理
         let updateFn = this.update['updateText'];
         let value = this.getTextVal(vm,expr);
+        expr.replace(/\{\{([^}]+)\}\}/g,(...arguments)=>{
+            new Watcher(vm,arguments[1],(newValue)=>{
+                updateFn && updateFn(node,this.getTextVal());
+            });
+        });  
         updateFn && updateFn(node,value);
+    },
+    setVal(vm,expr,value){
+        expr = expr.split('.');
+        return expr.reduce((prev,next,currentIndex)=>{
+            if(currentIndex == expr.length - 1){
+                return prev[next] = value;
+            }
+            return prev[next];
+        },vm.$data);
     },
     model(node,vm,expr){
         //输入框的处理
         let updateFn = this.update['updateModel']; 
+        //这里应该加一个监控，数据如果变化了，应该调用watch的cb
+        new Watcher(vm,expr,(newValue)=>{
+            //当值变化后会调用cb将新值传递过来
+            updateFn && updateFn(node,this.getVal(vm,expr));
+        });
+        node.addEventListener('input',(e)=>{
+            let newValue = e.target.value;
+            this.setVal(vm,expr,newValue);
+        })
         updateFn && updateFn(node,this.getVal(vm,expr));
     },
     update:{

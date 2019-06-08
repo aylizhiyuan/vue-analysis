@@ -87,5 +87,5 @@
         // parse
         parser.parse(html, handler);
 
-        
+> 总结：编译模板 + 数据劫持  + 最后通过watcher 发现当数据发生变化的时候重新编译模板        
 
