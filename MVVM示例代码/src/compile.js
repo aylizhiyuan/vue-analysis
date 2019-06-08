@@ -10,7 +10,6 @@ class Compile{
             this.compile(fragment);
             //3.把编译好的fragment塞会页面中去
             this.el.appendChild(fragment);
-
         }
     }
     //专门写一些辅助的方法
@@ -60,6 +59,7 @@ class Compile{
     compile(fragment){
         //递归
         let childNodes = fragment.childNodes;
+        console.log(childNodes);
         Array.from(childNodes).forEach(node=>{
             //所有的节点(只是第一层)
             if(this.isElementNode(node)){

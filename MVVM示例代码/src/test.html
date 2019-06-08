@@ -7,11 +7,14 @@
     <title>Document</title>
     <script src="mvvm.js"></script>
     <script src="compile.js"></script>
+    <script src="observer.js"></script>
 </head>
 <body>
     <div id="app">
-        <input type="text" v-model="message">
-        {{message}}
+        <input type="text" v-model="message.a">
+        <div>
+            <div>{{message.a}}</div>
+        </div>
     </div>
     
 </body>
@@ -20,7 +23,9 @@
     let vm = new MVVM({
         el:"#app",
         data:{
-            message:"hello world"
+            message:{
+                a:"hello world"
+            }
         }
     })
 </script>
