@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script src="htmlparser.js"></script>
+</head>
+<body>
+    
+</body>
+</html>
+<script>
+    var parser = new SimpleHtmlParser();
+        var html = '<div id="app">\n<p v-show="show">hello parser</p>\n<!--my-comment-->\n</div>';
+        console.log(html)
+        // 处理器
+        var handler = {
+            startElement: function (sTagName, oAttrs) {
+                console.log(sTagName, oAttrs)
+            },
+            endElement: function (sTagName) {
+                console.log(sTagName, 'end')
+            },
+            characters: function (s) {
+                console.log(s, 'characters')
+            },
+            comment: function (s) {
+                console.log(s, 'comment')
+            }
+        };
+        // parse
+        parser.parse(html, handler);
+</script>
