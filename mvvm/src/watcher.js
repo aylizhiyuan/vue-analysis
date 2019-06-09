@@ -9,14 +9,17 @@ class Watcher {
         this.value = this.get();
 
     }
-    getVal(vm,expr){
+    getVal(vm,expr){ 
         expr = expr.split('.');
         return expr.reduce((prev,next)=>{
-            return prev[next];
+            return prev[next]; 
         },vm.$data);
     }
     get(){
+        //将所有实例化的watcher都挂载到dep.target上
+        //感觉这个方法有点Low
         Dep.target = this;
+        //下面的这个方法会调用observe中的get方法
         let value = this.getVal(this.vm,this.expr);
         Dep.target = null;
         return value;

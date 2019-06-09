@@ -21,9 +21,12 @@ class Observer{
         let dep = new Dep();//每个变化的数据都会对应一个数组，这个数组是存放所有更新的操作
         Object.defineProperty(obj,key,{
             enumerable:true,
-            configurable:true,
+            configurable:true, 
             get(){
-                //当我尝试去取data里面值的时候
+                //来到这里了就意味着target里面有值
+                //什么情况下target里面有值呢？
+                //observe中的get()被调用了
+                //你可以理解为每次你new Watcher的时候都会将它放到dep中去
                 Dep.target && dep.addSub(Dep.target);
                 return value;
             },
