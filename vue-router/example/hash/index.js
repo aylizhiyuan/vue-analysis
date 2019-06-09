@@ -44,8 +44,8 @@ var router = new Router({
   ]
 })
 
-setTimeout(function () {
-  router.push({name: 'bar', query: {name: 'bar'}})
-  console.log(router.route)
-}, 1000)
+// setTimeout(function () {
+//   router.push({name: 'bar', query: {name: 'bar'}})
+//   console.log(router.route)
+// }, 1000)
 
